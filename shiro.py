@@ -1,3 +1,5 @@
+from flask import Flask
+from threading import Thread
 import os
 print("===== SHIRO V2 起動 =====")
 from dotenv import load_dotenv
@@ -45,6 +47,24 @@ birthday_manager = BirthdayManager(
 @tasks.loop(minutes=10)
 async def check_birthdays():
     await birthday_manager.check_birthdays(bot)
+
+# ==========================
+# Flaskサーバー
+# ==========================
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Shiro is running!"
+
+
+def run_web():
+    port = int(os.environ.get("PORT", 10000))
+
+    app.run(
+        host="0.0.0.0",
+        port=port
+    )
 
 
 # ==========================
@@ -208,5 +228,10 @@ async def odai_command(
 # ==========================
 # 起動
 # ==========================
+
+Thread(
+    target=run_web,
+    daemon=True
+).start()
 
 bot.run(TOKEN)
