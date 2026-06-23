@@ -107,15 +107,27 @@ class SheetsManager:
 
             try:
 
-                month, day = map(int, birthday.split("/"))
+                parts = birthday.split("/")
+
+                if len(parts) == 3:
+                    _, month, day = parts
+
+                elif len(parts) == 2:
+                    month, day = parts
+
+                else:
+                    continue
+
+                month = int(month)
+                day = int(day)
 
                 if (
-                    month == today.month 
+                    month == today.month
                     and day == today.day
                 ):
                     birthday_characters.append(char)
 
-            except (ValueError, IndexError):
+            except ValueError:
                 continue
 
         return birthday_characters

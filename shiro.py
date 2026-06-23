@@ -104,6 +104,7 @@ async def on_ready():
 )
 async def character_command(
     interaction: discord.Interaction,
+    private: bool = False,
     creation: str | None = None,
     gender: str | None = None,
     birth_month: int | None = None
@@ -192,7 +193,8 @@ async def character_command(
     )
 
     await interaction.followup.send(
-        embed=embed
+        embed=embed,
+        ephemeral=private
     )
 
 
@@ -205,7 +207,8 @@ async def character_command(
     description="お絵描きお題を表示します"
 )
 async def odai_command(
-    interaction: discord.Interaction
+    interaction: discord.Interaction,
+    private: bool = False
 ):
 
     odai = get_random_odai()
@@ -221,7 +224,8 @@ async def odai_command(
     )
 
     await interaction.response.send_message(
-        embed=embed
+        embed=embed,
+        ephemeral=private
     )
 
 
