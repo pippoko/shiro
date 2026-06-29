@@ -100,22 +100,32 @@ async def on_ready():
 @app_commands.describe(
     creation="創作名で絞り込み",
     gender="性別で絞り込み",
-    birth_month="誕生月で絞り込み"
+    birth_month="誕生月で絞り込み",
+    private="自分だけに表示する"
 )
+
 async def character_command(
     interaction: discord.Interaction,
     private: bool = False,
-    creation: str | None = None,
-    gender: str | None = None,
-    birth_month: int | None = None
+    creation: app_commands.Choice[str] | None = None,
+    gender: app_commands.Choice[str] | None = None,
+    birth_month: app_commands.Choice[int] | None = None
 ):
+    
 
-    await interaction.response.defer()
+
+    await interaction.response.defer(
+        ephemeral=private
+    )
+
+    creation_value = creation.value if creation else None
+    gender_value = gender.value if gender else None
+    birth_month_value = birth_month.value if birth_month else None
 
     character = await sheets.get_random_character(
-        creation=creation,
-        gender=gender,
-        birth_month=birth_month
+        creation=creation_value,
+        gender=gender_value,
+        birth_month=birth_month_value
     )
 
     if not character:
@@ -196,6 +206,43 @@ async def character_command(
         embed=embed,
         ephemeral=private
     )
+
+@app_commands.choices(
+        creation=[
+        app_commands.Choice(name="なし", value="なし"),
+        app_commands.Choice(name="レガード・オデッセイ", value="レガード・オデッセイ"),
+        app_commands.Choice(name="エモーション", value="エモーション"),
+        app_commands.Choice(name="バーベナの花束を", value="バーベナの花束を"),
+        app_commands.Choice(name="Fake painT", value="Fake painT"),
+        app_commands.Choice(name="【企画】ほうかご美術部！", value="【企画】ほうかご美術部！"),
+        app_commands.Choice(name="パラソルガール", value="パラソルガール"),
+        app_commands.Choice(name="暗影に灯るは", value="暗影に灯るは"),
+        app_commands.Choice(name="探索者", value="探索者"),
+        app_commands.Choice(name="【企画】ミネアカ", value="【企画】ミネアカ"),
+        ],
+        
+        gender=[
+            app_commands.Choice(name="男性", value="男性"),
+            app_commands.Choice(name="女性", value="女性"),
+            app_commands.Choice(name="無性", value="無性"),
+            app_commands.Choice(name="概念なし", value="概念なし")
+        ],
+
+        birth_month=[
+        app_commands.Choice(name="1月", value=1),
+        app_commands.Choice(name="2月", value=2),
+        app_commands.Choice(name="3月", value=3),
+        app_commands.Choice(name="4月", value=4),
+        app_commands.Choice(name="5月", value=5),
+        app_commands.Choice(name="6月", value=6),
+        app_commands.Choice(name="7月", value=7),
+        app_commands.Choice(name="8月", value=8),
+        app_commands.Choice(name="9月", value=9),
+        app_commands.Choice(name="10月", value=10),
+        app_commands.Choice(name="11月", value=11),
+        app_commands.Choice(name="12月", value=12),
+        ],
+)
 
 
 # ==========================
