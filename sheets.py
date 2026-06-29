@@ -131,3 +131,15 @@ class SheetsManager:
                 continue
 
         return birthday_characters
+    
+    async def get_creations(self) -> list[str]:
+        characters = await self.fetch_characters()
+        creations = sorted(
+            {
+                char.get("創作", "").strip()
+                for char in characters
+                if char.get("創作", "").strip()
+            }
+        )
+        
+        return list(creations)
